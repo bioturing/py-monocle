@@ -113,6 +113,7 @@ def minimum_spanning_tree(centroids: np.ndarray, k_nn: int = 25):
   """
   graph_shape = (centroids.shape[0], centroids.shape[0])
 
+  k_nn = min(k_nn, centroids.shape[0])
   kdtree = KDTree(centroids)
   knn_distances, knn_indices = kdtree.query(centroids, k_nn)
   graph = sparse.csr_matrix(
@@ -172,6 +173,7 @@ def compute_cluster_connectivities(
   if graph is None:
     assert matrix is not None, "Request one of matrix or neighbor graph."
     kdtree = KDTree(matrix)
+    n_neighbors = min(n_neighbors, matrix.shape[0])
     knn_distances, knn_indices = kdtree.query(matrix, n_neighbors)
     graph = fuzzy_simplicial_set(
       matrix, n_neighbors, 0, None,

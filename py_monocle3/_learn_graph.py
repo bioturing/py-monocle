@@ -128,7 +128,7 @@ def connect_tip_cells(
 def calculate_projection(
   matrix: np.ndarray,
   roots: np.ndarray,
-  leafs: np.ndarray,
+  leaves: np.ndarray,
 ) -> np.ndarray:
   """
   Calculate the projection of a cells onto the nearest edges of principal graph.
@@ -139,18 +139,18 @@ def calculate_projection(
     Coordinates of the cells, recommended UMAP embeddings.
   roots: ``ndarray``
     Coordinates nearest centroids on principal graph.
-  leafs: ``ndarray``
+  leaves: ``ndarray``
     Coordinates of another node of nearest edges.
   Returns
   -------
   projected_points: ``ndarray`` 
     Coordinate of the projection of the cells onto the nearest edges.
   """
-  edge_length = np.linalg.norm(leafs - roots, axis=1) ** 2
-  proj_factor = np.sum((matrix - roots) * (leafs - roots), axis=1) / edge_length
-  matrix = roots + proj_factor.reshape((-1, 1)) * (leafs - roots)
+  edge_length = np.linalg.norm(leaves - roots, axis=1) ** 2
+  proj_factor = np.sum((matrix - roots) * (leaves - roots), axis=1) / edge_length
+  matrix = roots + proj_factor.reshape((-1, 1)) * (leaves - roots)
   matrix[proj_factor < 0] = roots[proj_factor < 0]
-  matrix[proj_factor > 1] = leafs[proj_factor > 1]
+  matrix[proj_factor > 1] = leaves[proj_factor > 1]
   return matrix
 
 
