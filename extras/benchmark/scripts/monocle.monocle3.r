@@ -7,29 +7,18 @@ args <- commandArgs(trailingOnly=TRUE)
 data.path <- args[1]
 result.path <- args[2]
 
-# Read matrix
-barcodes <- h5read(data.path, "barcodes")
-features <- h5read(data.path, "features")
-data <- h5read(data.path, "data")
-indices <- h5read(data.path, "indices")
-indptr <- h5read(data.path, "indptr")
-
-expr.mtx <- Matrix::sparseMatrix(
-  i=indices, p=indptr, x=as.numeric(data),
-  dimnames=list(as.character(features), as.character(barcodes)),
-  index1=FALSE, repr="C")
-
 # Read parameters
+barcodes <- h5read(data.path, "barcodes")
 umap <- t(h5read(data.path, "umap"))
 louvain <- h5read(data.path, "louvain")
+rownames(umap) <- as.list(barcodes)
+colnames(umap) <- c("umap_1", "umap_2")
 
 # Create cell_data_set
-cds <- new_cell_data_set(expr.mtx)
+cds <- new_cell_data_set(t(umap))
 rownames(cds@colData) <- as.list(barcodes)
 
 # UMAP
-rownames(umap) <- as.list(barcodes)
-colnames(umap) <- c("umap_1", "umap_2")
 cds@int_colData@listData$reducedDims@listData[["UMAP"]] <- umap
 
 # Use 1 partition for all cells
@@ -46,7 +35,7 @@ cds@clusters@listData[["UMAP"]][["clusters"]] <- louvain
 start.time <- Sys.time()
 
 # Learn graph
-cds <- learn_graph(cds)
+cds <- learn_graph(cds, close_loop=FALSE)
 
 # Order cells
 cds <- order_cells(cds, root_cells=barcodes[1])

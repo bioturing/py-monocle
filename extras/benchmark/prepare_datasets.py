@@ -109,7 +109,7 @@ def _process_dataset(
   sc.pp.highly_variable_genes(adata, n_top_genes=2000, subset=True)
   sc.pp.pca(adata, n_comps=50)
   sc.pp.neighbors(adata, n_neighbors=30)
-  sc.tl.louvain(adata, flavor="igraph")
+  sc.tl.louvain(adata, resolution=0.1)
   sc.tl.umap(adata)
 
   with h5py.File(os.path.join(dataset_path, "matrix.hdf5"), "r+") as f:
@@ -130,10 +130,11 @@ def main():
 
   nnz, n_genes, n_cells = [], [], []
 
+  device = os.getenv("DEVICE", "FALSE") == "TRUE"
   for data_id in tqdm(data_ids):
     in_dataset_path = os.path.join(datasets_path, data_id)
     csr_mtx, barcodes, features = _read_dataset(in_dataset_path)
-    _process_dataset(in_dataset_path, csr_mtx)
+    _process_dataset(in_dataset_path, csr_mtx, device=device)
     nnz.append(csr_mtx.indptr[-1])
     n_cells.append(len(barcodes))
     n_genes.append(len(features))

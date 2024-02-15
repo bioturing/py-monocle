@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
   start_time = time.time()
   pseudotime(
-    matrix=matrix, root_cells=0, clusters=louvain, form_circle=True)
+    matrix=matrix, root_cells=0, clusters=louvain, form_circle=False)
   exec_time = time.time() - start_time
 
   res_df = pd.DataFrame({"exec_time": [exec_time]})
