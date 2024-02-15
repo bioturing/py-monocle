@@ -1,0 +1,8 @@
+boto3
+botocore
+h5py
+pandas
+igraph
+scanpy
+pytest
+psutil
