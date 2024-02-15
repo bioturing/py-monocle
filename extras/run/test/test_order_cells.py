@@ -2,7 +2,7 @@ import os
 import pytest
 import h5py
 import numpy as np
-from py_monocle3 import order_cells
+from py_monocle import order_cells
 
 from . import _constants as constants
 

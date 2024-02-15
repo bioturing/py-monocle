@@ -1,8 +1,7 @@
 import os
 import pytest
 import h5py
-import numpy as np
-from py_monocle3 import pseudotime
+from py_monocle import pseudotime
 from scipy.stats import kendalltau
 
 from . import _constants as constants
@@ -10,7 +9,8 @@ from . import _constants as constants
 
 @pytest.mark.parametrize("data_id", constants.DATASET)
 def test_pseudotime(data_id: str):
-  with h5py.File(os.path.join(constants.DATA_FOLDER, f"{data_id}.hdf5")) as f:
+  data_path = os.path.join(constants.DATA_FOLDER, f"{data_id}.hdf5")
+  with h5py.File(data_path, "r") as f:
     clusters = f["monocle3/k_means_clustering"][()]
     expected_pseudotime = f["monocle3/pseudotime"][()]
     matrix = f["umap"][()]

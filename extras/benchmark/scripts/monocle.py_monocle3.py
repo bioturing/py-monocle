@@ -2,7 +2,7 @@ import sys
 import time
 import h5py
 import pandas as pd
-from py_monocle3 import pseudotime
+from py_monocle import pseudotime
 
 
 if __name__ == "__main__":

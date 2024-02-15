@@ -5,8 +5,8 @@ from setuptools import setup
 __DIRNAME__ = os.path.dirname(os.path.abspath(__file__))
 
 
-BASE_PACKAGE = "py-monocle3"
-BASE_IMPORT = "py_monocle3"
+BASE_PACKAGE = "py-monocle"
+BASE_IMPORT = "py_monocle"
 
 
 def _get_version():
@@ -32,9 +32,8 @@ setup(
     url="https://alpha.bioturing.com",
     description="BioTuring Py-Monocle3",
     long_description="",
-    package_dir={BASE_IMPORT: BASE_IMPORT},
+    package_dir={BASE_IMPORT: "py_monocle3"},
     packages=[BASE_IMPORT],
-    include_package_data=True,
     zip_safe=False,
     python_requires=">=3.8, <3.12",
     install_requires=_install_requires(),
