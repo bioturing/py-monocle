@@ -60,7 +60,7 @@ kmean_res <- tryCatch({
 cds <- learn_graph(cds)
 
 # Order cells
-cds <- order_cells(cds, root_cells=barcodes[1])
+cds <- order_cells(cds, root_cells=barcodes[length(barcodes) %/% 2 + 1])
 
 # Write results
 principal_graph_aux <- cds@principal_graph_aux@listData$UMAP
@@ -82,4 +82,23 @@ h5write(
 h5write(
   kmean_res$cluster,
   file=data.path, name="monocle3/k_means_clustering"
+)
+
+principal_graph <- principal_graph_aux$stree
+h5createGroup(data.path,"monocle3/principal_graph")
+h5write(
+  principal_graph@x, file=data.path,
+  name="monocle3/principal_graph/data"
+)
+h5write(
+  principal_graph@i, file=data.path,
+  name="monocle3/principal_graph/indices"
+)
+h5write(
+  principal_graph@p, file=data.path,
+  name="monocle3/principal_graph/indptr"
+)
+h5write(
+  principal_graph@Dim, file=data.path,
+  name="monocle3/principal_graph/shape"
 )

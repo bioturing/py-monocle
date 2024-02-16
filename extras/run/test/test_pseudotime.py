@@ -1,6 +1,7 @@
 import os
 import pytest
 import h5py
+import numpy as np
 from py_monocle import pseudotime
 from scipy.stats import kendalltau
 
@@ -18,7 +19,12 @@ def test_pseudotime(data_id: str):
     matrix=matrix,
     clusters=clusters,
     use_clusters_as_kmeans=True,
-    root_cells=0,
+    root_cells=matrix.shape[0] // 2,
   )
+
+  diffs = abs(ptime - expected_pseudotime) / np.max(expected_pseudotime)
+  max_diff = np.max(diffs)
+  assert  max_diff < 0.1, f"Max ratio difference is {max_diff}."
+
   score = kendalltau(ptime, expected_pseudotime)[0]
   assert score > 0.95, f"The similarity is {score}."

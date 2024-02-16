@@ -93,6 +93,7 @@ def pseudotime(
     matrix,
     projected_points,
     centroids,
+    mst,
     root_cells=root_cells,
     root_pr_cells=root_pr_cells,
   )

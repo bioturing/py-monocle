@@ -3,6 +3,7 @@ import pytest
 import h5py
 import numpy as np
 from py_monocle import order_cells
+from py_monocle._utils import minimum_spanning_tree
 
 from . import _constants as constants
 
@@ -14,10 +15,12 @@ def test_order_cells(data_id: str):
     projected_points = f["monocle3/projected_points"][()]
     expected_pseudotime = f["monocle3/pseudotime"][()]
     matrix = f["umap"][()]
-  pseudotime = order_cells(
-    matrix, projected_points, centroids, root_cells=0)
-
-  diffs = np.max(abs(pseudotime - expected_pseudotime) / expected_pseudotime)
-  max_diff = np.max(np.nan_to_num(diffs))
-  assert max_diff < 0.05, \
-    f"Max ratio difference is {max_diff / np.max(expected_pseudotime)}."
+  mst = minimum_spanning_tree(centroids)
+  ptime = order_cells(
+    matrix, projected_points,
+    centroids, mst,
+    root_cells=matrix.shape[0] // 2
+  )
+  diffs = abs(ptime - expected_pseudotime) / np.max(expected_pseudotime)
+  max_diff = np.max(diffs)
+  assert  max_diff < 0.05, f"Max ratio difference is {max_diff}."
