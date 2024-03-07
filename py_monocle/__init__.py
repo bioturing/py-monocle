@@ -100,3 +100,4 @@ def pseudotime(
 
 
 from ._utils import compute_cell_states
+from ._de_genes import differential_expression_genes
