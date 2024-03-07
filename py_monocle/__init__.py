@@ -1,7 +1,6 @@
 from typing import Optional, Union
 import numpy as np
 
-from . import _utils as utils
 from ._learn_graph import learn_graph
 from ._order_cells import order_cells
 
@@ -98,3 +97,6 @@ def pseudotime(
     root_cells=root_cells,
     root_pr_cells=root_pr_cells,
   )
+
+
+from ._utils import compute_cell_states
