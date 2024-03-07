@@ -1,5 +1,6 @@
 from typing import Optional
 import numpy as np
+import pandas as pd
 from scipy import sparse
 from scipy.spatial import KDTree
 from scipy.sparse import csgraph
@@ -201,3 +202,79 @@ def compute_cluster_connectivities(
   adjust_p_value = np.minimum(cluster_mat * cluster_mat.size, 1)
 
   return adjust_p_value
+
+
+def create_projected_graph(
+    matrix: np.ndarray,
+    projected_points: np.ndarray,
+    centroids: np.ndarray,
+    mst: sparse.csr_matrix,
+) -> nx.Graph:
+  """Find minimum spanning tree of projected points based on the core graph.
+
+  Parameters
+  ----------
+  matrix : ``ndarray``
+    The expression matrix, recommended UMAP embeddings.
+  projected_points : ``ndarray``
+    Projected points of matrix onto the principal graph.
+  centroids : ``ndarray``
+    The centroids of the principal graph.
+  mst : ``csr_matrix``
+    The symmetrical minimum spanning tree of the principal graph.
+
+  Returns
+  -------
+  projectd_graph : ``nx.Graph``
+    The minimum spanning tree networkx.Graph of projected points.
+  """
+  nearest_edges = find_nearest_principal_edges(
+    matrix, centroids, mst
+  )
+  first_nodes = np.minimum(*nearest_edges)
+  second_nodes = np.maximum(*nearest_edges)
+  edge_group = first_nodes * len(centroids) + second_nodes
+  distances = np.sqrt(np.sum(
+    np.square(centroids[first_nodes] - projected_points), axis=1))
+  df = pd.DataFrame({
+    "cell_id": np.arange(len(matrix)),
+    "root": first_nodes + len(matrix),
+    "group": edge_group,
+    "distances": distances,
+  })
+  sort_df = df.sort_values(["group", "distances"]).groupby("group")
+  heads = sort_df["cell_id"].head(-1)
+  tails = sort_df["cell_id"].tail(-1)
+  df.iloc[tails, df.columns.get_loc("root")] = heads
+  df.iloc[tails, df.columns.get_loc("distances")] -= \
+    df.iloc[heads, df.columns.get_loc("distances")].to_numpy()
+  del df["group"]
+
+  # Add connection of last nodes in group to second node on their nearest edges
+  end_traces = sort_df["cell_id"].tail(1).to_numpy()
+  end_nodes = second_nodes[end_traces]
+  distances = np.sqrt(np.sum(
+    np.square(centroids[end_nodes] - projected_points[end_traces]), axis=1))
+  end_nodes += len(matrix)
+  df = pd.concat((df,
+                  pd.DataFrame({
+                    "cell_id": end_traces,
+                    "root": end_nodes,
+                    "distances": distances,
+                  })
+  ))
+
+  # Add connection of minimum spanning tree of the principal graph.
+  principal_edges = mst.nonzero()
+  df = pd.concat((df,
+                  pd.DataFrame({
+                    "cell_id": principal_edges[0] + len(matrix),
+                    "root": principal_edges[1] + len(matrix),
+                    "distances": mst.data,
+                  })
+  ))
+
+  graph = nx.Graph()
+  graph.add_weighted_edges_from(df.to_numpy())
+
+  return nx.minimum_spanning_tree(graph)

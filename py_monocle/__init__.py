@@ -1,6 +1,7 @@
 from typing import Optional, Union
 import numpy as np
 
+from . import _utils as utils
 from ._learn_graph import learn_graph
 from ._order_cells import order_cells
 
@@ -91,9 +92,9 @@ def pseudotime(
 
   return order_cells(
     matrix,
-    projected_points,
     centroids,
-    mst,
+    mst=mst,
+    projected_points=projected_points,
     root_cells=root_cells,
     root_pr_cells=root_pr_cells,
   )
