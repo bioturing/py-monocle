@@ -1,28 +1,31 @@
-BSD 3-Clause License
-
 Copyright (c) 2024, BioTuring
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
+Community-Use License Agreement
 
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+This Community-Use License Agreement ("Agreement") is entered into by and between BioTuring, a software company ("Licensor") and the individual or entity accessing and using the software ("Licensee").
 
-3. Neither the name of the copyright holder nor the names of its
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
+1. Grant of License for Non-Commercial Use
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+Licensor hereby grants Licensee a worldwide, non-exclusive, royalty-free license to use, modify, and distribute the software (the "Software") for non-commercial purposes only.
+
+2. Commercial Use and Licensing
+
+For any commercial use of the Software, Licensee is required to contact BioTuring to obtain a separate, commercial license. Commercial use includes, but is not limited to, distribution of the Software as part of a product or service for which a fee is charged.
+
+3. Distribution Requirements
+
+Licensee may distribute the Software for non-commercial purposes only. If Licensee wishes to distribute the Software for commercial purposes, they must obtain a commercial license from BioTuring.
+
+4. Ownership and Modifications
+
+BioTuring retains all rights, title, and interest in and to the Software. Any modifications made to the Software shall be governed by the terms of this Agreement.
+
+5. Disclaimer of Warranty and Limitation of Liability
+
+The Software is provided "as is" without warranty of any kind. In no event shall BioTuring be liable for any damages arising out of the use of or inability to use the Software, whether in an action of contract, negligence, or other tort.
+
+
+By using, modifying, or distributing the Software for non-commercial purposes, Licensee agrees to be bound by the terms and conditions of this Agreement.
+
+For commercial use, Licensee must contact BioTuring to obtain a commercial license.
