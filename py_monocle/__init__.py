@@ -7,6 +7,7 @@ from ._order_cells import order_cells
 
 def pseudotime(
     matrix: np.ndarray,
+    *,
     root_cells: Optional[Union[int, np.ndarray]] = None,
     root_pr_cells: Optional[Union[int, np.ndarray]] = None,
     n_centroids: Optional[int] = None,

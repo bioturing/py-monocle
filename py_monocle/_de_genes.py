@@ -3,7 +3,6 @@ import numpy as np
 from scipy import sparse
 from scipy.spatial import KDTree
 from anndata import AnnData
-from squidpy.gr import spatial_autocorr
 from statsmodels.stats.multitest import fdrcorrection
 
 
@@ -70,11 +69,13 @@ def differential_expression_genes(
     morans_i_scores, p_vals = morans_I_func(
       expression_matrix, distances_matrix, **morans_I_kwargs)
   else:
+    from squidpy.gr import spatial_autocorr
+
     adata = AnnData(X=expression_matrix)
     adata.obsp["connectivities"] = distances_matrix
     spatial_autocorr(
       adata, connectivity_key="connectivities", **morans_I_kwargs)
-    moran_I_res = adata.uns["moranI"].loc[adata.obs_names]
+    moran_I_res = adata.uns["moranI"].loc[adata.var_names]
     morans_i_scores = moran_I_res["I"]
     p_vals = moran_I_res["pval_norm"]
   _, adjusted_pvalues = fdrcorrection(p_vals, alpha=alpha)

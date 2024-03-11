@@ -9,6 +9,7 @@ from ._utils import find_nearest_principal_nodes, create_projected_graph
 def order_cells(
     matrix: np.ndarray,
     centroids: np.ndarray,
+    *,
     mst: Optional[sparse.csr_matrix] = None,
     projected_points: Optional[np.ndarray] = None,
     projected_graph: Optional[nx.Graph] = None,
