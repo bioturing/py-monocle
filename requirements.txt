@@ -3,3 +3,5 @@ scipy
 scikit-learn
 networkx
 umap-learn
+squidpy
+statsmodels

@@ -7,6 +7,7 @@ from ._order_cells import order_cells
 
 def pseudotime(
     matrix: np.ndarray,
+    *,
     root_cells: Optional[Union[int, np.ndarray]] = None,
     root_pr_cells: Optional[Union[int, np.ndarray]] = None,
     n_centroids: Optional[int] = None,
@@ -91,9 +92,13 @@ def pseudotime(
 
   return order_cells(
     matrix,
-    projected_points,
     centroids,
-    mst,
+    mst=mst,
+    projected_points=projected_points,
     root_cells=root_cells,
     root_pr_cells=root_pr_cells,
   )
+
+
+from ._utils import compute_cell_states
+from ._de_genes import differential_expression_genes

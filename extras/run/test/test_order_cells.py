@@ -17,8 +17,9 @@ def test_order_cells(data_id: str):
     matrix = f["umap"][()]
   mst = minimum_spanning_tree(centroids)
   ptime = order_cells(
-    matrix, projected_points,
-    centroids, mst,
+    matrix, centroids,
+    mst=mst,
+    projected_points=projected_points,
     root_cells=matrix.shape[0] // 2
   )
   diffs = abs(ptime - expected_pseudotime) / np.max(expected_pseudotime)

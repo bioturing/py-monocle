@@ -21,7 +21,7 @@ RUN apt-get install -y g++-9
 RUN apt-get install -y default-jre 
 RUN apt-get install -y libomp-13-dev
 
-RUN pip install numpy scipy scikit-learn networkx umap-learn
+RUN pip install numpy scipy scikit-learn networkx umap-learn squidpy statsmodels
 RUN pip install boto3 botocore h5py pandas scanpy igraph pytest psutil openpyxl
 
 

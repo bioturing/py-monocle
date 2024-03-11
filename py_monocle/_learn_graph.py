@@ -202,6 +202,7 @@ def __calc_objective_centroids(
 
 def __learn_graph(
     matrix: np.ndarray,
+    *,
     n_centroids: Optional[int] = None,
     clusters: Optional[np.ndarray] = None,
     centroids_per_log: int = 15,
