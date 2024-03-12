@@ -1,6 +1,7 @@
 from typing import Optional
 import numpy as np
 from scipy import sparse
+from scipy import stats
 from statsmodels.regression.linear_model import GLS
 
 
@@ -18,7 +19,10 @@ def __diff_test(
     if np.sum(exp) == 0:
       pvalues.append(0)
       continue
-    model = GLS(pseudotime, (exp - exp.mean()) / exp.std()).fit()
+    model = GLS(
+      pseudotime,
+      np.nan_to_num(stats.zscore(exp))
+    ).fit()
     pvalues.append(model.pvalues[0])
   pvalues = np.array(pvalues).astype(np.float32)
   return pvalues
