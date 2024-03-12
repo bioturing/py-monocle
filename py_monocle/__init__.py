@@ -3,6 +3,9 @@ import numpy as np
 
 from ._learn_graph import learn_graph
 from ._order_cells import order_cells
+from ._utils import compute_cell_states
+from ._de_genes import differential_expression_genes
+from ._stats import regression_analysis
 
 
 def pseudotime(
@@ -24,6 +27,7 @@ def pseudotime(
     gamma: float = 0.5,
     eps: float = 1e-5,
     use_clusters_as_kmeans: bool = False,
+    return_cell_states: bool = False,
 ):
   """
   Compute pseudotime for the given expression matrix.
@@ -66,6 +70,8 @@ def pseudotime(
     Relative objective difference.
   use_clusters_as_kmeans: ``bool``, default: ``False``
     If ``True``, use clusters as kmeans clustering.
+  return_cell_states: ``bool``, default: ``False``
+    If ``True``, return cell states on principal graph.
 
   Returns
   -------
@@ -90,7 +96,7 @@ def pseudotime(
     use_clusters_as_kmeans=use_clusters_as_kmeans,
   )
 
-  return order_cells(
+  ptime = order_cells(
     matrix,
     centroids,
     mst=mst,
@@ -99,6 +105,8 @@ def pseudotime(
     root_pr_cells=root_pr_cells,
   )
 
+  if return_cell_states:
+    cell_states, _ = compute_cell_states(matrix, centroids, mst=mst)
+    return ptime, cell_states
 
-from ._utils import compute_cell_states
-from ._de_genes import differential_expression_genes
+  return ptime
