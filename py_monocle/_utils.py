@@ -8,6 +8,28 @@ from scipy.stats import norm
 import networkx as nx
 
 
+def _hash_edge(
+  first: int,
+  second: int,
+):
+  """Hash an edge to a string.
+
+  Parameters
+  ----------
+  first : ``int``
+    The first node of the edge.
+  second : ``int``
+    The second node of the edge.
+
+  Returns
+  -------
+  edge_hash: ``str``
+    The hash of the edges.
+  """
+  first, second = (first, second) if first < second else (second, first)
+  return f"{first}-{second}"
+
+
 def find_nearest_principal_nodes(
     matrix: np.ndarray,
     centroids: np.ndarray,
@@ -358,3 +380,53 @@ def compute_cell_states(
   states = np.array([states_mapping[state] for state in states])
 
   return np.array(states[indices]), np.array(branching_nodes)
+
+
+def order_cell_states(
+    matrix: np.ndarray,
+    centroids: np.ndarray,
+    mst: sparse.csr_matrix,
+    root_cell: int,
+):
+  """Find states of cell from the ``root_cell``.
+  A cellular state is a progression that proceeds in a specific direction.
+
+  Parameters
+  ----------
+  matrix : ``ndarray``
+    The expression matrix, recommended UMAP embeddings.
+  centroids : ``ndarray``
+    The centroids of the principal graph.
+  mst : ``csr_matrix``
+    The symmetrical minimum spanning tree of the principal graph.
+  root_cell : ``int``
+    The start centroid for computing the states. Must be index of
+    the ``centroids`` of the principal graph.
+
+  Returns
+  -------
+  cell_states : ``ndarray``
+    The states of cell in preorder depth-first search from the ``root_cell``.
+  """
+  first_nodes, second_nodes = find_nearest_principal_edges(
+    matrix, centroids, mst
+  )
+
+  graph = nx.from_scipy_sparse_array(mst)
+  fathers = nx.dfs_predecessors(graph, source=root_cell)
+  orders = nx.dfs_preorder_nodes(graph, source=root_cell)
+  states = dict()
+  curr_state = -1
+
+  for curr_node in orders:
+    if curr_node in fathers:
+      parent_node = fathers[curr_node]
+      # Change state when reach to branch node or root node
+      if graph.degree(parent_node) > 2 or parent_node == root_cell:
+        curr_state += 1
+      states[_hash_edge(parent_node, curr_node)] = curr_state
+
+  states = [
+    states[_hash_edge(i, j)] for i, j in zip(first_nodes, second_nodes)
+  ]
+  return np.array(states, dtype=np.uint32)
