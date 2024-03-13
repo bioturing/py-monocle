@@ -285,7 +285,7 @@ def create_projected_graph(
 def compute_cell_states(
     matrix: np.ndarray,
     centroids: np.ndarray,
-    mst: sparse.csr_matrix,
+    mst: Optional[sparse.csr_matrix] = None,
 ):
   """Find states of cell.
   A cellular state is a progression that proceeds in a specific direction.
@@ -296,8 +296,9 @@ def compute_cell_states(
     The expression matrix, recommended UMAP embeddings.
   centroids : ``ndarray``
     The centroids of the principal graph.
-  mst : ``csr_matrix``
+  mst : ``Optional[csr_matrix]``, default: None
     The symmetrical minimum spanning tree of the principal graph.
+    If ``mst`` is None, auto computing from ``centroids``.
 
   Returns
   -------
@@ -306,6 +307,9 @@ def compute_cell_states(
   branching_nodes: ``ndarray``:
     Root nodes of cellular states.
   """
+  if mst is None:
+    mst = minimum_spanning_tree(centroids)
+
   nearest_edges = find_nearest_principal_edges(
     matrix, centroids, mst
   )
