@@ -245,7 +245,7 @@ def __learn_graph(
 
   kdtree = KDTree(matrix)
   knn_dists, _ = kdtree.query(matrix, k_nn)
-  rho = np.exp(- np.mean(knn_dists, axis=1))
+  rho = np.exp(- np.mean(knn_dists, axis=1)) + 1e-6
   indices = sparse.csr_matrix(
     (rho, labels, np.arange(len(rho)))
   ).argmax(axis=0)
