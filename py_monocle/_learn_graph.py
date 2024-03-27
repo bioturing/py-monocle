@@ -33,7 +33,10 @@ def prune_tree(
   centroid_indices: ``ndarray``
     list of remaining indices of centroids
   """
-  root_node = np.where(np.diff(mst.indptr) == 2)[0][0]
+  branch_nodes = np.where(np.diff(mst.indptr) == 2)[0]
+  if len(branch_nodes) == 0:
+    return np.arange(mst.shape[0], dtype=int)
+  root_node = branch_nodes[0]
 
   graph: nx.Graph = nx.from_scipy_sparse_array(mst)
   dfs = np.array(list(nx.dfs_preorder_nodes(graph, source=root_node)))
