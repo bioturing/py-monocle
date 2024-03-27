@@ -289,7 +289,8 @@ def create_projected_graph(
   ))
 
   # Add connection of minimum spanning tree of the principal graph.
-  principal_edges = mst.nonzero()
+  mst = mst.tocoo()
+  principal_edges = mst.row, mst.col
   df = pd.concat((df,
                   pd.DataFrame({
                     "cell_id": principal_edges[0] + len(matrix),
