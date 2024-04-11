@@ -9,8 +9,8 @@ import networkx as nx
 
 
 def _hash_edge(
-  first: int,
-  second: int,
+    first: int,
+    second: int,
 ):
   """Hash an edge to a string.
 
@@ -88,8 +88,8 @@ def find_nearest_principal_edges(
     indexes = (nearest_nodes == node).reshape(-1)
 
     distances = np.array([
-      np.sum(np.square(matrix[indexes] - centroids[vertice]), axis=1)
-      for vertice in edge_vertices
+        np.sum(np.square(matrix[indexes] - centroids[vertice]), axis=1)
+        for vertice in edge_vertices
     ])
     second_nodes[indexes] = edge_vertices[np.argmin(distances, axis=0)]
   return [nearest_nodes, second_nodes]
@@ -139,10 +139,10 @@ def minimum_spanning_tree(centroids: np.ndarray, k_nn: int = 25):
   kdtree = KDTree(centroids)
   knn_distances, knn_indices = kdtree.query(centroids, k_nn)
   graph = sparse.csr_matrix(
-    (knn_distances.flatten(),
-     knn_indices.flatten(),
-     np.arange(0, knn_distances.size + 1, k_nn)),
-    shape=graph_shape)
+      (knn_distances.flatten(),
+       knn_indices.flatten(),
+       np.arange(0, knn_distances.size + 1, k_nn)),
+      shape=graph_shape)
 
   n_components, labels = csgraph.connected_components(graph, directed=False)
 
@@ -159,7 +159,7 @@ def minimum_spanning_tree(centroids: np.ndarray, k_nn: int = 25):
         connected_edges.append([cpns_j[nearest_node],
                                 cpns_i[knn_indices.flatten()[nearest_node]],
                                 knn_distances.flatten()[nearest_node],
-                              ])
+                                ])
     graph.add_weighted_edges_from(connected_edges)
 
   mst = nx.to_scipy_sparse_array(nx.minimum_spanning_tree(graph))
@@ -201,15 +201,15 @@ def compute_cluster_connectivities(
     from umap.umap_ import fuzzy_simplicial_set
 
     graph = fuzzy_simplicial_set(
-      matrix, n_neighbors, 0, None,
-      knn_dists=np.sqrt(knn_distances), knn_indices=knn_indices
+        matrix, n_neighbors, 0, None,
+        knn_dists=np.sqrt(knn_distances), knn_indices=knn_indices
     )[0]
     graph = graph.tocsr()
   graph.data[:] = 1
 
   components, clusters = np.unique(clusters, return_inverse=True)
   clusters = sparse.csr_matrix((
-    np.ones(len(clusters)), clusters, np.arange(len(clusters) + 1)
+      np.ones(len(clusters)), clusters, np.arange(len(clusters) + 1)
   ), shape=(len(clusters), len(components)))
 
   n_links = clusters.transpose() @ graph @ clusters
@@ -218,7 +218,7 @@ def compute_cluster_connectivities(
   edges_per_cls = np.sum(n_links, axis=1)
   total_edges = np.sum(edges_per_cls)
 
-  probs = edges_per_cls /total_edges
+  probs = edges_per_cls / total_edges
   theta = probs.reshape((-1, 1)) @ probs.reshape((1, -1))
   n_links_var = theta * (1 - theta) / total_edges
   n_links = n_links / total_edges - theta
@@ -253,51 +253,51 @@ def create_projected_graph(
     The minimum spanning tree networkx.Graph of projected points.
   """
   nearest_edges = find_nearest_principal_edges(
-    matrix, centroids, mst
+      matrix, centroids, mst
   )
   first_nodes = np.minimum(*nearest_edges)
   second_nodes = np.maximum(*nearest_edges)
   edge_group = first_nodes * len(centroids) + second_nodes
   distances = np.sqrt(np.sum(
-    np.square(centroids[first_nodes] - projected_points), axis=1))
+      np.square(centroids[first_nodes] - projected_points), axis=1))
   df = pd.DataFrame({
-    "cell_id": np.arange(len(matrix)),
-    "root": first_nodes + len(matrix),
-    "group": edge_group,
-    "distances": distances,
+      "cell_id": np.arange(len(matrix)),
+      "root": first_nodes + len(matrix),
+      "group": edge_group,
+      "distances": distances,
   })
   sort_df = df.sort_values(["group", "distances"]).groupby("group")
   heads = sort_df["cell_id"].head(-1)
   tails = sort_df["cell_id"].tail(-1)
   df.iloc[tails, df.columns.get_loc("root")] = heads
   df.iloc[tails, df.columns.get_loc("distances")] -= \
-    df.iloc[heads, df.columns.get_loc("distances")].to_numpy()
+      df.iloc[heads, df.columns.get_loc("distances")].to_numpy()
   del df["group"]
 
   # Add connection of last nodes in group to second node on their nearest edges
   end_traces = sort_df["cell_id"].tail(1).to_numpy()
   end_nodes = second_nodes[end_traces]
   distances = np.sqrt(np.sum(
-    np.square(centroids[end_nodes] - projected_points[end_traces]), axis=1))
+      np.square(centroids[end_nodes] - projected_points[end_traces]), axis=1))
   end_nodes += len(matrix)
   df = pd.concat((df,
                   pd.DataFrame({
-                    "cell_id": end_traces,
-                    "root": end_nodes,
-                    "distances": distances,
+                      "cell_id": end_traces,
+                      "root": end_nodes,
+                      "distances": distances,
                   })
-  ))
+                  ))
 
   # Add connection of minimum spanning tree of the principal graph.
   mst = mst.tocoo()
   principal_edges = mst.row, mst.col
   df = pd.concat((df,
                   pd.DataFrame({
-                    "cell_id": principal_edges[0] + len(matrix),
-                    "root": principal_edges[1] + len(matrix),
-                    "distances": mst.data,
+                      "cell_id": principal_edges[0] + len(matrix),
+                      "root": principal_edges[1] + len(matrix),
+                      "distances": mst.data,
                   })
-  ))
+                  ))
 
   graph = nx.Graph()
   graph.add_weighted_edges_from(df.to_numpy())
@@ -334,7 +334,7 @@ def compute_cell_states(
     mst = minimum_spanning_tree(centroids)
 
   nearest_edges = find_nearest_principal_edges(
-    matrix, centroids, mst
+      matrix, centroids, mst
   )
   first_nodes = np.minimum(*nearest_edges)
   second_nodes = np.maximum(*nearest_edges)
@@ -353,9 +353,9 @@ def compute_cell_states(
 
   group_states = []
   for i in range(len(indptr) - 1):
-    end =  indptr[i + 1]
+    end = indptr[i + 1]
     end += (i + 2) < len(indptr) and \
-      parents[indptr[i]] != parents[indptr[i + 1]]
+        parents[indptr[i]] != parents[indptr[i + 1]]
     group_states.append(parents[indptr[i]:end])
 
   group_states = []
@@ -364,10 +364,10 @@ def compute_cell_states(
     curr_states = parents[indptr[i]:indptr[i + 1]]
     if parents[indptr[i]] not in visited_parents:
       curr_states = np.concatenate(
-        (curr_states, [parents[indptr[i + 1]]]))
+          (curr_states, [parents[indptr[i + 1]]]))
     else:
       curr_states = np.concatenate(
-        (curr_states, [children[indptr[i + 1] - 1]]))
+          (curr_states, [children[indptr[i + 1] - 1]]))
     group_states.append(curr_states)
     if (i + 2) < len(indptr):
       visited_parents.append(parents[indptr[i + 1]])
@@ -410,7 +410,7 @@ def order_cell_states(
     The states of cell in preorder depth-first search from the ``root_cell``.
   """
   first_nodes, second_nodes = find_nearest_principal_edges(
-    matrix, centroids, mst
+      matrix, centroids, mst
   )
 
   graph = nx.from_scipy_sparse_array(mst)
@@ -428,6 +428,6 @@ def order_cell_states(
       states[_hash_edge(parent_node, curr_node)] = curr_state
 
   states = [
-    states[_hash_edge(i, j)] for i, j in zip(first_nodes, second_nodes)
+      states[_hash_edge(i, j)] for i, j in zip(first_nodes, second_nodes)
   ]
   return np.array(states, dtype=np.uint32)

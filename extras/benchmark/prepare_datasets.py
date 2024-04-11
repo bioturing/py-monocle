@@ -93,7 +93,7 @@ def _process_dataset(
     dataset_path: Path,
     csr_matrix: sparse.csr_matrix,
     device: bool = False,
-  ):
+):
   if device:
     from bioalpha import sc
   else:
