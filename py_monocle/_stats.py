@@ -20,8 +20,8 @@ def __diff_test(
       pvalues.append(0)
       continue
     model = GLS(
-      pseudotime,
-      np.nan_to_num(stats.zscore(exp))
+        pseudotime,
+        np.nan_to_num(stats.zscore(exp))
     ).fit()
     pvalues.append(model.pvalues[0])
   pvalues = np.array(pvalues).astype(np.float32)
@@ -58,7 +58,7 @@ def regression_analysis(
   pvals_matrix = []
   for i in np.unique(cell_states):
     pvals_matrix.append(__diff_test(
-      expression_matrix[cell_states==i],
-      pseudotime[cell_states==i]
+        expression_matrix[cell_states == i],
+        pseudotime[cell_states == i]
     ))
   return np.array(pvals_matrix, dtype=np.float32)

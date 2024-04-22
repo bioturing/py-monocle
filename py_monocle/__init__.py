@@ -79,30 +79,30 @@ def pseudotime(
     Pseudotime values for each cell.
   """
   projected_points, mst, centroids = learn_graph(
-    matrix=matrix,
-    n_centroids=n_centroids,
-    clusters=clusters,
-    partitions=partitions,
-    centroids_per_log=centroids_per_log,
-    prune=prune,
-    p_threshold=p_threshold,
-    form_circle=form_circle,
-    kmeans_seed=kmeans_seed,
-    max_iter=max_iter,
-    k_nn=k_nn,
-    sigma=sigma,
-    gamma=gamma,
-    eps=eps,
-    use_clusters_as_kmeans=use_clusters_as_kmeans,
+      matrix=matrix,
+      n_centroids=n_centroids,
+      clusters=clusters,
+      partitions=partitions,
+      centroids_per_log=centroids_per_log,
+      prune=prune,
+      p_threshold=p_threshold,
+      form_circle=form_circle,
+      kmeans_seed=kmeans_seed,
+      max_iter=max_iter,
+      k_nn=k_nn,
+      sigma=sigma,
+      gamma=gamma,
+      eps=eps,
+      use_clusters_as_kmeans=use_clusters_as_kmeans,
   )
 
   ptime = order_cells(
-    matrix,
-    centroids,
-    mst=mst,
-    projected_points=projected_points,
-    root_cells=root_cells,
-    root_pr_cells=root_pr_cells,
+      matrix,
+      centroids,
+      mst=mst,
+      projected_points=projected_points,
+      root_cells=root_cells,
+      root_pr_cells=root_pr_cells,
   )
 
   if return_cell_states:

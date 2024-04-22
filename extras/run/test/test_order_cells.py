@@ -17,11 +17,11 @@ def test_order_cells(data_id: str):
     matrix = f["umap"][()]
   mst = minimum_spanning_tree(centroids)
   ptime = order_cells(
-    matrix, centroids,
-    mst=mst,
-    projected_points=projected_points,
-    root_cells=matrix.shape[0] // 2
+      matrix, centroids,
+      mst=mst,
+      projected_points=projected_points,
+      root_cells=matrix.shape[0] // 2
   )
   diffs = abs(ptime - expected_pseudotime) / np.max(expected_pseudotime)
   max_diff = np.max(diffs)
-  assert  max_diff < 0.05, f"Max ratio difference is {max_diff}."
+  assert max_diff < 0.05, f"Max ratio difference is {max_diff}."

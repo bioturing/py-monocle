@@ -118,7 +118,7 @@ def _run_function(
 def run_monocle(dataset_ids: list):
   def args_fn(tmpdir: Path, dataset_id: str):
     dataset_path = os.path.join(
-      DATASETS, dataset_id, "matrix.hdf5")
+        DATASETS, dataset_id, "matrix.hdf5")
     result_path = os.path.join(tmpdir, "result.csv")
     return (dataset_path, result_path), result_path
 

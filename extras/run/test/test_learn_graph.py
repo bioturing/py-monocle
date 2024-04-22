@@ -22,21 +22,21 @@ def test_learn_graph(data_id: str):
     n_cells = len(f["barcodes"])
     n_genes = len(f["features"])
     expression_matrix = sparse.csr_matrix(
-      (data, indices, indptr), shape=(n_cells, n_genes))
+        (data, indices, indptr), shape=(n_cells, n_genes))
 
   projected_points, _, _ = py_monocle.learn_graph(
-    matrix=matrix,
-    clusters=clusters,
-    use_clusters_as_kmeans=True,
+      matrix=matrix,
+      clusters=clusters,
+      use_clusters_as_kmeans=True,
   )
 
   _, result_p_vals, _ = py_monocle.differential_expression_genes(
-    expression_matrix, projected_points
+      expression_matrix, projected_points
   )
   result_genes = np.where(result_p_vals < 0.01)[0]
 
   _, truth_p_vals, _ = py_monocle.differential_expression_genes(
-    expression_matrix, truth_projected_points
+      expression_matrix, truth_projected_points
   )
   truth_genes = np.where(truth_p_vals < 0.01)[0]
 

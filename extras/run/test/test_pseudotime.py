@@ -16,15 +16,15 @@ def test_pseudotime(data_id: str):
     expected_pseudotime = f["monocle3/pseudotime"][()]
     matrix = f["umap"][()]
   ptime = pseudotime(
-    matrix=matrix,
-    clusters=clusters,
-    use_clusters_as_kmeans=True,
-    root_cells=matrix.shape[0] // 2,
+      matrix=matrix,
+      clusters=clusters,
+      use_clusters_as_kmeans=True,
+      root_cells=matrix.shape[0] // 2,
   )
 
   diffs = abs(ptime - expected_pseudotime) / np.max(expected_pseudotime)
   max_diff = np.max(diffs)
-  assert  max_diff < 0.1, f"Max ratio difference is {max_diff}."
+  assert max_diff < 0.1, f"Max ratio difference is {max_diff}."
 
   score = kendalltau(ptime, expected_pseudotime)[0]
   assert score > 0.95, f"The similarity is {score}."

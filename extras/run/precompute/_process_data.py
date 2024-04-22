@@ -35,10 +35,10 @@ def process(data_id: str):
     indices = f["indices"][()]
     indptr = f["indptr"][()]
   adata = sc.AnnData(
-    X=sparse.csr_matrix((data, indices, indptr),
-                        shape=(len(barcodes), len(features))),
-    obs=pd.DataFrame({}, index=barcodes),
-    var=pd.DataFrame({}, index=features),
+      X=sparse.csr_matrix((data, indices, indptr),
+                          shape=(len(barcodes), len(features))),
+      obs=pd.DataFrame({}, index=barcodes),
+      var=pd.DataFrame({}, index=features),
   )
   sc.pp.filter_genes(adata, min_cells=10)
   sc.pp.normalize_total(adata)
@@ -54,8 +54,8 @@ def process(data_id: str):
     f.create_dataset("louvain", data=np.array(adata.obs["louvain"]))
 
   proc = SPAWN_CTX.Process(
-    target=_subprocess,
-    args=(data_id, data_path),
+      target=_subprocess,
+      args=(data_id, data_path),
   )
   proc.start()
   proc.join()

@@ -43,19 +43,19 @@ def order_cells(
     Pseudotime values for each cell.
   """
   assert (root_cells is not None) ^ (root_pr_cells is not None), \
-    "Request one and only one of root_cells or root_pr_cells is not None."
+      "Request one and only one of root_cells or root_pr_cells is not None."
   if root_cells is not None:
     assert matrix is not None, "Request expression matrix for root_cells."
     root_cells = matrix[root_cells].reshape((-1, 2))
     root_pr_cells = find_nearest_principal_nodes(root_cells, centroids)
   root_cells = find_nearest_principal_nodes(
-    centroids[root_pr_cells].reshape((-1, 2)), matrix
+      centroids[root_pr_cells].reshape((-1, 2)), matrix
   )
 
   if projected_graph is None:
     projected_graph = create_projected_graph(
-      matrix, projected_points, centroids, mst)
+        matrix, projected_points, centroids, mst)
 
   pseudotime = nx.multi_source_dijkstra_path_length(
-    projected_graph, sources=set(root_cells), weight="weight")
+      projected_graph, sources=set(root_cells), weight="weight")
   return np.array([pseudotime.get(i, np.inf) for i in range(len(matrix))])

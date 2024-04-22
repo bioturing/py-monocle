@@ -7,17 +7,18 @@ from statsmodels.stats.multitest import fdrcorrection
 
 
 __KNN_TYPE__ = Callable[[np.ndarray, int], List[np.ndarray]]
-__MORANS_I_TYPE__ = Callable[[sparse.csr_matrix, sparse.csr_matrix], List[np.ndarray]]
+__MORANS_I_TYPE__ = Callable[[
+    sparse.csr_matrix, sparse.csr_matrix], List[np.ndarray]]
 
 
 def differential_expression_genes(
-  expression_matrix: sparse.spmatrix,
-  projected_cells: np.ndarray,
-  n_neighbors: int = 30,
-  knn_func: Optional[__KNN_TYPE__] = None,
-  alpha: float = 0.05,
-  morans_I_func: Optional[__MORANS_I_TYPE__] = None,
-  morans_I_kwargs: dict = {},
+    expression_matrix: sparse.spmatrix,
+    projected_cells: np.ndarray,
+    n_neighbors: int = 30,
+    knn_func: Optional[__KNN_TYPE__] = None,
+    alpha: float = 0.05,
+    morans_I_func: Optional[__MORANS_I_TYPE__] = None,
+    morans_I_kwargs: dict = {},
 ) -> List[np.ndarray]:
   """Identifying genes with complex trajectory-dependence expression.
 
@@ -61,20 +62,20 @@ def differential_expression_genes(
   n_cells = projected_cells.shape[0]
   indptr = np.arange(0, knn_indices.size + 1, knn_indices.shape[1])
   distances_matrix = sparse.csr_matrix(
-    (knn_distances.flatten(), knn_indices.flatten(), indptr),
-    shape=(n_cells, n_cells), dtype=np.float64,
+      (knn_distances.flatten(), knn_indices.flatten(), indptr),
+      shape=(n_cells, n_cells), dtype=np.float64,
   )
 
   if morans_I_func is not None:
     morans_i_scores, p_vals = morans_I_func(
-      expression_matrix, distances_matrix, **morans_I_kwargs)
+        expression_matrix, distances_matrix, **morans_I_kwargs)
   else:
     from squidpy.gr import spatial_autocorr
 
     adata = AnnData(X=expression_matrix)
     adata.obsp["connectivities"] = distances_matrix
     spatial_autocorr(
-      adata, connectivity_key="connectivities", **morans_I_kwargs)
+        adata, connectivity_key="connectivities", **morans_I_kwargs)
     moran_I_res = adata.uns["moranI"].loc[adata.var_names]
     morans_i_scores = moran_I_res["I"]
     p_vals = moran_I_res["pval_norm"]
