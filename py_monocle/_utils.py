@@ -74,8 +74,7 @@ def find_nearest_principal_edges(
   nearest_edges: ``list``
     The indices of the two vertices of the nearest edges.
   """
-  if not isinstance(mst, sparse.csr_matrix):
-    mst = sparse.csr_matrix(mst)
+  mst = sparse.csr_matrix(mst)
   mst = mst + mst.transpose()
   vertices = (np.diff(mst.indptr) > 0).nonzero()[0]
 
