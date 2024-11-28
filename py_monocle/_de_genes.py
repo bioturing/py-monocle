@@ -40,9 +40,9 @@ def differential_expression_genes(
     If None, using ``squidpy.gr.spatial_autocorr``
   morans_I_kwargs: ``dict``, default: Empty
     Kwargs for Moran's I scores.
-  principal_graph: 
+  principal_graph:
     The symmetrical minimum spanning tree of the principal graph.
-    If not None, using to cut off connections of neighbors graph. 
+    If not None, using to cut off connections of neighbors graph.
 
   Returns
   -------
@@ -77,8 +77,8 @@ def differential_expression_genes(
     spatial_autocorr(
         adata, connectivity_key="connectivities", **morans_I_kwargs)
     moran_I_res = adata.uns["moranI"].loc[adata.var_names]
-    morans_i_scores = moran_I_res["I"]
-    p_vals = moran_I_res["pval_norm"]
+    morans_i_scores = moran_I_res["I"].values.copy()
+    p_vals = moran_I_res["pval_norm"].values.copy()
   _, adjusted_pvalues = fdrcorrection(p_vals, alpha=alpha)
 
   return morans_i_scores, p_vals, adjusted_pvalues
