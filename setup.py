@@ -35,6 +35,6 @@ setup(
     package_dir={BASE_IMPORT: "py_monocle"},
     packages=[BASE_IMPORT],
     zip_safe=False,
-    python_requires=">=3.8, <3.12",
+    python_requires=">=3.8",
     install_requires=_install_requires(),
 )
